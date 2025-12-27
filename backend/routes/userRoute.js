@@ -1,14 +1,20 @@
 import express from "express";
-import { registerUser, loginUser, adminLogin, userDisplay, getShippingDetails, addShippingDetails} from "../controllers/userController.js";
+import { adminLogin, register, verify, resendVerificationCode, login, recoverPassword, getUser, googleAuth, userDisplay, getShippingDetails, addShippingDetails} from "../controllers/userController.js";
 import userAuth from "../middleware/userAuth.js";
 import adminAuth from "../middleware/adminAuth.js";
 
 const userRoute = express.Router();
 
-userRoute.post("/register", registerUser);
-userRoute.post("/login", loginUser);
 userRoute.post("/admin", adminLogin);
-userRoute.get("/display", adminAuth ,userDisplay);
+userRoute.post("/register", register);
+userRoute.post("/verify", verify);
+userRoute.post("/resend", resendVerificationCode);
+userRoute.post("/login", login);
+userRoute.post("/recover", recoverPassword);
+userRoute.get("/user/:userId", userAuth, getUser);
+// userRoute.get("/display/:userId", userDisplay);
+userRoute.post("/google", googleAuth);
+userRoute.get("/allusers", adminAuth, userDisplay);
 userRoute.get("/shipping/:userId", getShippingDetails);
 userRoute.post("/addshipping", addShippingDetails);
 

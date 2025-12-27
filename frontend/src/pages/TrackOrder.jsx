@@ -40,7 +40,6 @@ const TrackOrder = () => {
     fetchOrderDetails();
   }, [orderId]);
 
-  // Define the order statuses and their display order
   const orderSteps = [
     { name: "Order Placed", statusKey: "order placed" },
     { name: "Order Confirmed", statusKey: "order confirmed" },
@@ -54,49 +53,21 @@ const TrackOrder = () => {
 
   const getStepStatus = (currentOrderStatus, stepStatusKey) => {
     const lowerCaseCurrentStatus = currentOrderStatus.toLowerCase();
-
     if (lowerCaseCurrentStatus === "cancelled") {
-      if (stepStatusKey === "order placed") {
-        return "completed";
-      } else if (stepStatusKey === "cancelled") {
-        return "active";
-      } else {
-        return "pending";
-      }
+      if (stepStatusKey === "order placed") return "completed";
+      return stepStatusKey === "cancelled" ? "active" : "pending";
     }
-
-    // Normal progression for non-cancelled orders
     const currentOrderIndex = orderSteps.findIndex(
       (step) => step.statusKey === lowerCaseCurrentStatus
     );
     const stepIndex = orderSteps.findIndex(
       (step) => step.statusKey === stepStatusKey
     );
-
-    if (stepIndex <= currentOrderIndex) {
-      return "completed";
-    } else if (stepIndex === currentOrderIndex) {
-      return "active";
-    } else {
-      return "pending";
-    }
+    if (stepIndex < currentOrderIndex) return "completed";
+    if (stepIndex === currentOrderIndex) return "active";
+    return "pending";
   };
 
-  if (loading) {
-    return (
-      <div className="track-order-container">Loading order details...</div>
-    );
-  }
-
-  if (error) {
-    return <div className="track-order-container error-message">{error}</div>;
-  }
-
-  if (!order) {
-    return <div className="track-order-container">Order not found.</div>;
-  }
-
-  // Format date and time
   const formatDateTime = (dateString) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
@@ -110,16 +81,36 @@ const TrackOrder = () => {
     });
   };
 
+  // Helper for just the Delivery Date (No time)
+  const formatDateOnly = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  if (loading)
+    return (
+      <div className="track-order-container">Loading order details...</div>
+    );
+  if (error)
+    return <div className="track-order-container error-message">{error}</div>;
+  if (!order)
+    return <div className="track-order-container">Order not found.</div>;
+
   const isOrderCancelled = order.status.toLowerCase() === "cancelled";
 
   return (
     <div className="track-order-container">
-      <h1>Track Order #{order._id}</h1>
+      <h1>Track Order #{order._id.slice(-8).toUpperCase()}</h1>
 
       <div className="order-details-summary">
         <div className="summary-item">
           <strong>Order Total:</strong> {currency}
-          {order.amount.toFixed(1)}
+          {order.amount.toFixed(2)}
         </div>
         <div className="summary-item">
           <strong>Current Status:</strong>{" "}
@@ -132,8 +123,18 @@ const TrackOrder = () => {
           </span>
         </div>
         <div className="summary-item">
-          <strong>Order Date:</strong>
-          {formatDateTime(order.statusHistory[0].timestamp)}
+          <strong>Ordered On:</strong>{" "}
+          {formatDateTime(order.statusHistory[0]?.timestamp)}
+        </div>
+
+        {/* --- NEW DELIVERY SCHEDULE INFO --- */}
+        <div className="summary-item delivery-highlight">
+          <strong>Scheduled Delivery:</strong>
+          <div className="delivery-badge">
+            <span>{formatDateOnly(order.deliveryDate)}</span>
+            <br />
+            <span>{order.deliveryTimeSlot}</span>
+          </div>
         </div>
       </div>
 
@@ -143,24 +144,18 @@ const TrackOrder = () => {
             if (
               step.statusKey !== "order placed" &&
               step.statusKey !== "cancelled"
-            ) {
+            )
               return null;
-            }
           } else {
-            if (step.statusKey === "cancelled") {
-              return null;
-            }
+            if (step.statusKey === "cancelled") return null;
           }
 
           const status = getStepStatus(order.status, step.statusKey);
           const isCompleted = status === "completed";
           const isActive = status === "active";
-
-          const stepHistoryEntry = order.statusHistory
-            ? order.statusHistory.find(
-                (entry) => entry.status.toLowerCase() === step.statusKey
-              )
-            : null;
+          const stepHistoryEntry = order.statusHistory?.find(
+            (entry) => entry.status.toLowerCase() === step.statusKey
+          );
           const stepTimestamp = stepHistoryEntry
             ? stepHistoryEntry.timestamp
             : null;
@@ -177,7 +172,6 @@ const TrackOrder = () => {
                 {isCompleted ? (
                   <svg
                     viewBox="0 0 16 16"
-                    className="bi bi-check-lg"
                     fill="currentColor"
                     height={16}
                     width={16}
@@ -189,33 +183,22 @@ const TrackOrder = () => {
                   index + 1
                 )}
               </div>
-              {/* Don't render line after the last step being displayed */}
-              {!(
-                isOrderCancelled &&
-                step.statusKey === "cancelled" &&
-                index ===
-                  orderSteps.findIndex((s) => s.statusKey === "cancelled")
-              ) && // No line after cancelled step if it's the last rendered
-                !(index === orderSteps.length - 1 && !isOrderCancelled) && // No line after delivered if not cancelled
-                !(
-                  index ===
-                    orderSteps.findIndex(
-                      (s) =>
-                        s.statusKey ===
-                        (isOrderCancelled ? "cancelled" : "delivered")
-                    ) && index !== orderSteps.length - 1
-                ) && ( // No line after current last rendered step
+              {/* Stepper Logic for lines */}
+              {!(isOrderCancelled && step.statusKey === "cancelled") &&
+                !(index === orderSteps.length - 1 && !isOrderCancelled) && (
                   <div className="stepper-line" />
                 )}
               <div className="stepper-content">
                 <div className="stepper-title">{step.name}</div>
                 <div className="stepper-status">
-                  {isCompleted && "Completed"}
-                  {isActive && "In Progress"}
-                  {!isCompleted && !isActive && "Pending"}
+                  {isCompleted
+                    ? "Completed"
+                    : isActive
+                    ? "In Progress"
+                    : "Pending"}
                 </div>
                 <div className="stepper-time">
-                  {stepTimestamp ? formatDateTime(stepTimestamp) : "N/A"}
+                  {stepTimestamp ? formatDateTime(stepTimestamp) : "--"}
                 </div>
               </div>
             </div>
@@ -226,26 +209,22 @@ const TrackOrder = () => {
       <div className="order-items-section">
         <h3>Order Items</h3>
         <div className="order-items-list">
-          {order.items && order.items.length > 0 ? (
-            order.items.map((item, index) => (
-              <div key={item._id || index} className="order-item-detail-track">
-                <img
-                  src={item.image[0]}
-                  alt={item.name}
-                  className="item-image-track"
-                />
-                <div className="item-info-track">
-                  <span className="item-name-track">{item.name}</span>
-                  <span className="item-quantity-price-track">
-                    x{item.quantity} - {currency}
-                    {(item.price * item.quantity).toFixed(2)}
-                  </span>
-                </div>
+          {order.items?.map((item, index) => (
+            <div key={item._id || index} className="order-item-detail-track">
+              <img
+                src={item.image[0]}
+                alt={item.name}
+                className="item-image-track"
+              />
+              <div className="item-info-track">
+                <span className="item-name-track">{item.name}</span>
+                <span className="item-quantity-price-track">
+                  x{item.quantity} - {currency}
+                  {(item.price * item.quantity).toFixed(2)}
+                </span>
               </div>
-            ))
-          ) : (
-            <p>No items found for this order.</p>
-          )}
+            </div>
+          ))}
         </div>
       </div>
 

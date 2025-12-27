@@ -1,0 +1,274 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+/* Container to center the card */
+.signin-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+/* The Card - using neumorphic style */
+.signin-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    background: #e8e8e8;
+    box-shadow: 0.75rem 0.75rem 1.125rem #bababa, -0.75rem -0.75rem 1.125rem #ffffff;
+}
+
+/* Heading - using text-shadow style */
+#signin-heading {
+    text-align: center;
+    font-size: 2rem;
+    letter-spacing: 3px;
+    font-weight: 600;
+    color: #333;
+    text-shadow: -2px -2px 3px #ffffff, 2px 2px 3px #bababa;
+    margin-bottom: 2rem;
+}
+
+.signin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.signin-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Input Wrappers */
+.signin-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Inputs - using animated gradient style */
+.signin-input-field {
+    width: 100%;
+    padding: 0.8rem 2.8rem;
+    border: none;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    background: linear-gradient(to right, white, #80808010, white);
+    background-size: 200% 200%;
+    animation: input-glow 4s infinite;
+    box-shadow: inset -0.125rem -0.125rem 0.25rem #ffffff,
+                inset 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+    outline: none;
+    transition: 0.3s;
+}
+
+.signin-input-field:focus {
+    background: #f1f1f1;
+}
+
+/* Icons inside inputs */
+.signin-input-icon {
+    position: absolute;
+    left: 1rem;
+    color: #5b42f3;
+    font-size: 0.9rem;
+    background: transparent;
+}
+
+.signin-password-toggle-icon {
+    position: absolute;
+    right: 1rem;
+    cursor: pointer;
+    color: #666;
+    transition: 0.2s;
+}
+
+/* Forgot Password Link */
+.signin-forgot-password-button {
+    background: transparent;
+    border: none;
+    color: #058ad2;
+    text-align: right;
+    font-size: 0.85rem;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.signin-forgot-password-button:hover {
+    text-decoration: underline;
+}
+
+/* Error/Success Messages */
+.signin-message {
+    padding: 0.7rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.signin-error {
+    color: #7f1d1d;
+    background-color: #fecaca;
+    border: 1px solid #ef4444;
+}
+
+.signin-success {
+    color: #064e3b;
+    background-color: #d1fae5;
+    border: 1px solid #10b981;
+}
+
+/* Main Login Button */
+.signin-button1 {
+    padding: 0.9rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+    background-size: 150% 150%;
+    animation: input-glow 5s infinite;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    box-shadow: inset 0.063rem 0.188rem 0.188rem #ffffffbd,
+                inset -0.25rem -0.25rem 0.188rem #00000046;
+    transition: transform 0.2s;
+}
+
+.signin-button1:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Secondary Buttons Group */
+.signin-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.signin-button2 {
+    background: transparent;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.signin-button2:hover {
+    text-decoration: underline;
+}
+
+/* Google Button */
+.signin-google-signin-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 0.7rem;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #555;
+    transition: 0.3s;
+}
+
+.signin-google-signin-button:hover:not(:disabled) {
+    background: #f8f8f8;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.signin-google-icon {
+    color: #4285F4;
+}
+
+/* Keyframes */
+@keyframes input-glow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Responsive Styles */
+@media (max-width: 480px) {
+    .signin-card {
+        padding: 1.5rem;
+        max-width: 90%;
+    }
+    #signin-heading {
+        font-size: 1.5rem;
+    }
+}
+
+/* Container for the bottom buttons */
+.signin-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+    background-color: transparent;
+}
+
+/* "Don't have an account? Sign Up" - matching your original .signup / .login style */
+.signin-button2 {
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    font-size: 0.95em;
+    cursor: pointer;
+    color: #333;
+    transition: text-decoration 0.3s;
+}
+
+.signin-button2:hover {
+    text-decoration: underline;
+    color: #058ad2; /* Blue color from your original links */
+}
+
+/* Google Sign-in Button - matching the neumorphic pop-out style */
+.signin-google-signin-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 0.8rem;
+    background: #ffffff;
+    border: none;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #555;
+    /* Neumorphic shadow to make it pop */
+    box-shadow: 0.2rem 0.2rem 0.5rem #bababa, -0.2rem -0.2rem 0.5rem #ffffff;
+    transition: all 0.3s ease;
+}
+
+.signin-google-signin-button:hover:not(:disabled) {
+    /* Neumorphic "pressed" effect on hover */
+    box-shadow: inset 0.1rem 0.1rem 0.2rem #bababa, inset -0.1rem -0.1rem 0.2rem #ffffff;
+    background: #f8f8f8;
+}
+
+.signin-google-icon {
+    color: #4285F4; /* Standard Google Blue */
+    font-size: 1.1rem;
+}
+
+/* Loader spinning animation */
+.fa-spinner {
+    margin-right: 8px;
+}

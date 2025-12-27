@@ -127,7 +127,7 @@ function Navbar() {
     if (isLoggedIn) {
       setShowUserDropdown(!showUserDropdown); // Toggle dropdown if logged in
     } else {
-      window.location.href = "/login"; // Redirect to login if not logged in
+      window.location.href = "/signin"; // Redirect to login if not logged in
     }
   };
 
@@ -246,7 +246,7 @@ function Navbar() {
                       <>
                         <button
                           className="login"
-                          onClick={() => (window.location.href = "/login")}
+                          onClick={() => (window.location.href = "/signin")}
                         >
                           Login
                         </button>

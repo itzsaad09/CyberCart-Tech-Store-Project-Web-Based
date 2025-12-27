@@ -34,9 +34,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('userToken'); // Remove the token
     setIsLoggedIn(false); // Update login status
     localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('token');
     localStorage.removeItem('cartData');
     // Optionally, redirect to login page or home page
-    window.location.href = '/login'; // Redirect to login after logout
+    window.location.href = '/signin'; // Redirect to login after logout
   };
 
   // The context value that will be provided to consumers

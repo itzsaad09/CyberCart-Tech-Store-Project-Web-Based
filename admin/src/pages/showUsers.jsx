@@ -21,7 +21,7 @@ function ShowUsers({ setToken }) {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(backendUrl + "/api/user/display", {
+      const response = await axios.get(backendUrl + "/api/user/allusers", {
         headers: { token: sessionStorage.getItem("token") },
       });
 

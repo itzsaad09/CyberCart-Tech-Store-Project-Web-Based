@@ -1,0 +1,176 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+/* Container to center the card */
+.otpverification-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+/* Neumorphic Card */
+.otpverification-card {
+    width: 100%;
+    max-width: 450px;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    background: #e8e8e8;
+    box-shadow: 0.75rem 0.75rem 1.125rem #bababa, -0.75rem -0.75rem 1.125rem #ffffff;
+}
+
+.otpverification-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* Headings */
+#otpverification-heading {
+    text-align: center;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    font-weight: 600;
+    color: #333;
+    text-shadow: -2px -2px 3px #ffffff, 2px 2px 3px #bababa;
+}
+
+.otpverification-subheading {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+    max-width: 80%;
+}
+
+/* OTP Input Boxes Container */
+.otpverification-input-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin: 10px 0;
+}
+
+/* Individual Digit Inputs */
+.otpverification-input-field {
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 0.6rem;
+    background: linear-gradient(to bottom, white, #80808010);
+    box-shadow: inset -0.125rem -0.125rem 0.25rem #ffffff,
+                inset 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+    outline: none;
+    color: #5b42f3;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.otpverification-input-field:focus {
+    transform: scale(1.05);
+    box-shadow: inset -0.125rem -0.125rem 0.25rem #ffffff,
+                inset 0.125rem 0.125rem 0.4rem rgba(91, 66, 243, 0.4);
+}
+
+/* Primary Verify Button */
+.otpverification-button1 {
+    width: 100%;
+    padding: 0.9rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    background: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+    background-size: 150% 150%;
+    animation: gradient-animation 5s infinite;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    box-shadow: inset 0.063rem 0.188rem 0.188rem #ffffffbd,
+                inset -0.25rem -0.25rem 0.188rem #00000046;
+    transition: transform 0.2s;
+}
+
+.otpverification-button1:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Resend Button */
+.otpverification-button2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    color: #058ad2;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.otpverification-button2:disabled {
+    color: #888;
+    cursor: not-allowed;
+}
+
+.otpverification-button2:hover:not(:disabled) {
+    text-decoration: underline;
+}
+
+/* Status Messages */
+.otpverification-message {
+    padding: 0.7rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    text-align: center;
+    font-weight: 600;
+    width: 100%;
+}
+
+.otpverification-message.error {
+    color: #7f1d1d;
+    background-color: #fecaca;
+    border: 1px solid #ef4444;
+}
+
+.otpverification-message.success {
+    color: #064e3b;
+    background-color: #d1fae5;
+    border: 1px solid #10b981;
+}
+
+/* Keyframes */
+@keyframes gradient-animation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Responsive Styles */
+@media (max-width: 480px) {
+    .otpverification-card {
+        padding: 1.5rem;
+    }
+    
+    .otpverification-input-field {
+        width: 40px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+
+    #otpverification-heading {
+        font-size: 1.4rem;
+    }
+}

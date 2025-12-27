@@ -240,3 +240,32 @@
     border-radius: 8px;
   }
 }
+
+.orders-table-header, .order-row {
+    display: grid;
+    /* Adjusted grid template to accommodate the new column */
+    grid-template-columns: 1fr 3.5fr 1fr 1.5fr 1fr; 
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+}
+
+.delivery-schedule-cell {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 1.4;
+}
+
+.delivery-date-text {
+    font-weight: 600;
+    color: #333;
+}
+
+.delivery-time-text {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+/* Status colors */
+.status-order-placed { background-color: #e3f2fd; color: #1976d2; border-radius: 4px; padding: 4px; text-align: center; }

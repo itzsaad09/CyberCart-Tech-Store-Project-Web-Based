@@ -111,6 +111,8 @@ function Orders({ setToken, token }) {
                   <th>Product Name</th>
                   <th>Quantity</th>
                   <th>Bill Amount</th>
+                  <th>Delivery Date</th>
+                  <th>Delivery Time Slot</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -134,6 +136,10 @@ function Orders({ setToken, token }) {
                         <b>{currency}</b>{" "}
                         {(item.price * item.quantity).toFixed(2)}
                       </td>
+                      <td>
+                        {new Date(order.deliveryDate).toLocaleDateString()}
+                      </td>
+                      <td>{order.deliveryTimeSlot}</td>
 
                       {index === 0 ? (
                         <>

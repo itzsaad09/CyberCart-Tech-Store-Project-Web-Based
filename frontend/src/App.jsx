@@ -12,8 +12,11 @@ import PrivacyPolicy from "./pages/PrivacyPolicy.jsx"
 import RefundPolicy from "./pages/RefundPolicy.jsx"
 import TermsofServices from "./pages/TermsofServices.jsx"
 import Footer from "./components/Footer";
-import Login from "./pages/Login.jsx";
+import Signin from "./pages/SignIn.jsx";
 import Signup from "./pages/Signup.jsx";
+import ForgotPassword from "./components/ForgotPassword.jsx";
+import ChangePassword from "./components/ChangePassword.jsx";
+import OTPVerification from "./components/OTPVerification.jsx";
 import Cart from "./components/cart.jsx";
 import Shipping from "./components/shippingDetails.jsx"
 import PaymentMethod from "./components/paymentMethod.jsx"
@@ -45,8 +48,11 @@ function App() {
           <Route path="/privacypolicy" element={<PrivacyPolicy />} />
           <Route path="/refundpolicy" element={<RefundPolicy />} />
           <Route path="/termsofservices" element={<TermsofServices />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/verify" element={<OTPVerification />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/shipping" element={<Shipping />} />
           <Route path="/payment" element={<PaymentMethod />} />
