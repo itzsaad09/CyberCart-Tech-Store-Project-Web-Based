@@ -42,7 +42,7 @@ const sendWelcomeEmail = async (fname, lname, email) => {
     html: welcomeEmailTemplate
       .replace("[User Name]", `${fname} ${lname}`)
       .replace("[CURRENT_YEAR]", new Date().getFullYear())
-      .replace("[EXPLORE_SHOP_URL]", `${process.env.FRONTEND_URL}shop`)
+      .replace("[EXPLORE_SHOP_URL]", `${process.env.FRONTEND_URL}`)
       .replace("[YOUR_WEBSITE_URL]", `${process.env.FRONTEND_URL}`)
       .replace("[PRIVACY_POLICY_URL]", `${process.env.FRONTEND_URL}privacypolicy`)
       .replace("[TERMS_OF_SERVICE_URL]", `${process.env.FRONTEND_URL}termsofservices`),

@@ -95,15 +95,18 @@ const OTPVerification = () => {
         verificationCode: otpCode,
       });
 
-      const token = Boolean(localStorage.getItem("token"));
 
       if (response.status === 200) {
         setMessage("Verification successful! Redirecting...");
         setIsSuccess(true);
 
+        localStorage.setItem("token", response.data.token);
+
+        const token = Boolean(localStorage.getItem("token"));
+
         if (token) {
           setTimeout(() => {
-            window.location.href = "/";
+            window.location.href = "/login";
           }, 1500);
         } else {
           setTimeout(() => {

@@ -142,7 +142,7 @@ const verify = async (req, res) => {
       token,
       userId: user._id, // Include userId in response
       message:
-        "Account successfully verified! Please log in to complete your profile.",
+        "Account successfully verified! You can now log in to your account.",
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
