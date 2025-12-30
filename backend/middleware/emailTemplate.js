@@ -182,7 +182,7 @@ export const orderPlacedTemplate = `
     <div class="email-container">
         <div class="header"><h1>CyberCart</h1></div>
         <div class="content">
-            <h2>Order Confirmed! 🛒</h2>
+            <h2>Order Placed! 🛒</h2>
             <p>Hello [User Name], thank you for your purchase! We've received your order and are getting it ready.</p>
             <div class="order-box">
                 <p><strong>Order ID:</strong> <span class="highlight">#[ORDER_ID]</span></p>
