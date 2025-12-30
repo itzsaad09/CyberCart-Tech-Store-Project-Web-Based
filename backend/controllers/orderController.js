@@ -19,6 +19,7 @@ const placeOrder = async (req, res) => {
       cardDetails,
       deliveryDate,
       deliveryTimeSlot,
+      orderDate,
     } = req.body;
 
     const user = await userModel.findById(userId);
@@ -53,6 +54,7 @@ const placeOrder = async (req, res) => {
       payment: paymentMethod === "cash_on_delivery" ? false : true,
       deliveryDate: new Date(deliveryDate),
       deliveryTimeSlot: deliveryTimeSlot,
+      orderDate: orderDate ? new Date(orderDate) : new Date(),
     };
 
     if (paymentMethod === "credit_card" && cardDetails) {

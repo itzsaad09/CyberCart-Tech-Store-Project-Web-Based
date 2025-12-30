@@ -1,5 +1,5 @@
 import express from "express";
-import { adminLogin, register, verify, resendVerificationCode, login, recoverPassword, getUser, googleAuth, userDisplay, getShippingDetails, addShippingDetails} from "../controllers/userController.js";
+import { adminLogin, register, verify, resendVerificationCode, login, recoverPassword, getUser, googleAuth, userDisplay, getShippingDetails, addShippingDetails, editShippingDetails, deleteShippingDetails } from "../controllers/userController.js";
 import userAuth from "../middleware/userAuth.js";
 import adminAuth from "../middleware/adminAuth.js";
 
@@ -17,5 +17,7 @@ userRoute.post("/google", googleAuth);
 userRoute.get("/allusers", adminAuth, userDisplay);
 userRoute.get("/shipping/:userId", getShippingDetails);
 userRoute.post("/addshipping", addShippingDetails);
+userRoute.put("/editshipping", userAuth, editShippingDetails);
+userRoute.delete("/deleteshipping", userAuth, deleteShippingDetails);
 
 export default userRoute;

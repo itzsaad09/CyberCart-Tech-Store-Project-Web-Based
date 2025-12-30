@@ -2,7 +2,7 @@ import express from "express";
 import {
   addProduct,
   singleProduct,
-  displayProduct, // This is the controller with search functionality
+  displayProduct,
   updateProduct,
   deleteProduct,
 } from "../controllers/productController.js";
@@ -24,10 +24,7 @@ productRoute.post(
 
 productRoute.post("/single", singleProduct);
 
-// ---
-// Search Functionality
-productRoute.get("/display", displayProduct); // This route now handles search queries
-// ---
+productRoute.get("/display", displayProduct);
 
 productRoute.put(
   "/update",
@@ -40,6 +37,6 @@ productRoute.put(
   updateProduct
 );
 
-productRoute.delete("/delete", adminAuth, deleteProduct); // Ensure adminAuth is before deleteProduct
+productRoute.delete("/delete", adminAuth, deleteProduct);
 
 export default productRoute;

@@ -41,6 +41,7 @@ const orderSchema = new mongoose.Schema({
 
   cardDetails: { type: Object, default: {} },
   payment: { type: Boolean, required: true, default: false },
+  orderDate: { type: Date, default: Date.now },
   statusHistory: [
     {
       _id: false,

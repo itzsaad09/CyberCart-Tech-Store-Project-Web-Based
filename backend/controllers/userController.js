@@ -113,7 +113,6 @@ const verify = async (req, res) => {
 
     // Check if the verification code has expired
     if (new Date() > user.verificationCodeExpiresAt) {
-      // If expired, remove the code and expiration time from the user document
       user.verificationCode = null;
       user.verificationCodeExpiresAt = null;
       await user.save();
@@ -140,7 +139,7 @@ const verify = async (req, res) => {
     // After verification, user will still need to log in to get profile completion check
     res.status(200).json({
       token,
-      userId: user._id, // Include userId in response
+      userId: user._id,
       message:
         "Account successfully verified! You can now log in to your account.",
     });
@@ -280,7 +279,7 @@ const googleAuth = async (req, res) => {
     );
     const googleProfile = googleResponse.data;
 
-    const { email, given_name, family_name, sub: googleId } = googleProfile; // 'sub' is Google's unique user ID
+    const { email, given_name, family_name, sub: googleId } = googleProfile; 
 
     // 2. Check if a user with this email already exists in your database
     let user = await userModel.findOne({ email });
@@ -307,17 +306,17 @@ const googleAuth = async (req, res) => {
       // If user does not exist, register them
       const generatedPassword =
         Math.random().toString(36).slice(-8) +
-        Math.random().toString(36).slice(-8); // Example: random 16-char string
+        Math.random().toString(36).slice(-8);
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(generatedPassword, salt);
 
       const newUser = new userModel({
-        fname: given_name || "GoogleUser", // Use Google's first name, or a default
-        lname: family_name || "", // Use Google's last name
+        fname: given_name || "GoogleUser", 
+        lname: family_name || "",
         email: email,
-        password: hashedPassword, // Store a generated password
-        googleId: googleId, // Store Google's unique ID
-        isVerified: true, // Mark as verified since Google handles email verification
+        password: hashedPassword,
+        googleId: googleId,
+        isVerified: true,
       });
 
       user = await newUser.save();
@@ -361,9 +360,8 @@ const userDisplay = async (req, res) => {
 // Controller Function to Get User's Shipping Details
 const getShippingDetails = async (req, res) => {
   try {
-    const { userId } = req.params; // Get userId from URL parameters
+    const { userId } = req.params;
 
-    // Find the user by ID and select only the shippingDetails field
     const user = await userModel.findById(userId).select("shippingDetails");
 
     if (!user) {
@@ -372,7 +370,6 @@ const getShippingDetails = async (req, res) => {
         .json({ success: false, message: "User not found." });
     }
 
-    // Send back the shipping details array
     res
       .status(200)
       .json({ success: true, shippingDetails: user.shippingDetails });
@@ -389,7 +386,7 @@ const getShippingDetails = async (req, res) => {
 // Controller Function to Add Shipping Details
 const addShippingDetails = async (req, res) => {
   try {
-    const { userId, shippingInfo } = req.body; // Expect userId and the new shippingInfo object
+    const { userId, shippingInfo } = req.body;
 
     if (!userId || !shippingInfo) {
       return res.status(400).json({
@@ -398,11 +395,10 @@ const addShippingDetails = async (req, res) => {
       });
     }
 
-    // Find the user and push the new shippingInfo into the shippingDetails array
     const user = await userModel.findByIdAndUpdate(
       userId,
       { $push: { shippingDetails: shippingInfo } },
-      { new: true, runValidators: true } // 'new: true' returns the updated document, 'runValidators: true' ensures schema validation
+      { new: true, runValidators: true }
     );
 
     if (!user) {
@@ -432,6 +428,65 @@ const addShippingDetails = async (req, res) => {
   }
 };
 
+// Controller Function to Edit existing Shipping Details
+const editShippingDetails = async (req, res) => {
+  try {
+    const { userId, addressId, updatedInfo } = req.body;
+
+    if (!userId || !addressId || !updatedInfo) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID, Address ID, and updated info are required.",
+      });
+    }
+
+    // Use the positional operator '$' to update the specific element in the array
+    const user = await userModel.findOneAndUpdate(
+      { _id: userId, "shippingDetails._id": addressId },
+      {
+        $set: {
+          "shippingDetails.$": { ...updatedInfo, _id: addressId } 
+        }
+      },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User or Address not found." });
+    }
+
+    res.status(200).json({ success: true, message: "Shipping details updated.", shippingDetails: user.shippingDetails });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Controller Function to Delete Shipping Details
+const deleteShippingDetails = async (req, res) => {
+  try {
+    const { userId, addressId } = req.body;
+
+    if (!userId || !addressId) {
+      return res.status(400).json({ success: false, message: "User ID and Address ID are required." });
+    }
+
+    // Use $pull to remove the object with the matching _id from the array
+    const user = await userModel.findByIdAndUpdate(
+      userId,
+      { $pull: { shippingDetails: { _id: addressId } } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    res.status(200).json({ success: true, message: "Shipping address deleted.", shippingDetails: user.shippingDetails });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export {
   adminLogin,
   register,
@@ -444,4 +499,6 @@ export {
   userDisplay,
   getShippingDetails,
   addShippingDetails,
+  editShippingDetails,
+  deleteShippingDetails,
 };
