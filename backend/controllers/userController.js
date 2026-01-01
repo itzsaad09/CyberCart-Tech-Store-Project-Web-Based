@@ -294,6 +294,7 @@ const googleAuth = async (req, res) => {
       const appToken = createToken(user._id);
       return res.status(200).json({
         user: {
+          _id: user._id,
           email: user.email,
           fname: user.fname,
           lname: user.lname,
