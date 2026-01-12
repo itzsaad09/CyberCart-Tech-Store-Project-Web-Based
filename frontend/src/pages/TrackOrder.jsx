@@ -55,7 +55,7 @@ const TrackOrder = () => {
     const lowerCaseCurrentStatus = currentOrderStatus.toLowerCase();
     if (lowerCaseCurrentStatus === "cancelled") {
       if (stepStatusKey === "order placed") return "completed";
-      return stepStatusKey === "cancelled" ? "active" : "pending";
+      return stepStatusKey === "cancelled" ? "completed" : "pending";
     }
     const currentOrderIndex = orderSteps.findIndex(
       (step) => step.statusKey === lowerCaseCurrentStatus
