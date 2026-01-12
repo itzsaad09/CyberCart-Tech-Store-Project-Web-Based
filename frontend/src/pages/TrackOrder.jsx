@@ -64,7 +64,7 @@ const TrackOrder = () => {
       (step) => step.statusKey === stepStatusKey
     );
     if (stepIndex < currentOrderIndex) return "completed";
-    if (stepIndex === currentOrderIndex) return "active";
+    if (stepIndex === currentOrderIndex) return "completed";
     return "pending";
   };
 
