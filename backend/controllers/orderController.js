@@ -1,11 +1,32 @@
 import userModel from "../models/userModel.js";
 import productModel from "../models/productModel.js";
 import orderModel from "../models/orderModel.js";
+import notificationModel from "../models/notificationModel.js";
 import {
   sendOrderPlacedEmail,
   sendOrderShippedEmail,
   sendOrderDeliveredEmail,
 } from "../middleware/email.js";
+
+// --- Helper: Create Notification record for Flutter Messages Screen ---
+const createNotification = async (userId, orderId, status) => {
+  try {
+    const emoji = status === "Delivered" ? "✅" : "🚚";
+    const orderIdShort = orderId.toString().slice(-6).toUpperCase();
+    const message = `Order #${orderIdShort} is now ${status} ${emoji}`;
+    
+    const notification = new notificationModel({
+      userId,
+      orderId,
+      message,
+      status,
+      isRead: false
+    });
+    await notification.save();
+  } catch (error) {
+    console.error("Error creating notification:", error);
+  }
+};
 
 const placeOrder = async (req, res) => {
   try {
@@ -67,6 +88,9 @@ const placeOrder = async (req, res) => {
 
     const newOrder = new orderModel(orderData);
     await newOrder.save();
+
+    // --- NEW: Create Notification for "Order Placed" ---
+    await createNotification(userId, newOrder._id, "Order Placed");
 
     const orderDetailsForEmail = {
       id: newOrder._id,
@@ -167,7 +191,6 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
-    const previousStatus = order.status;
     order.status = status;
 
     if (
@@ -178,6 +201,9 @@ const updateOrderStatus = async (req, res) => {
     }
 
     await order.save();
+
+    // --- NEW: Create Notification for Status Update (Shipped, Delivered, etc.) ---
+    await createNotification(order.userId._id, order._id, status);
 
     const user = order.userId;
 
