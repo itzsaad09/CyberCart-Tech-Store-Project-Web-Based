@@ -90,7 +90,7 @@ const displayProduct = async (req, res) => {
 
     if (keyword) {
       query.$or = [
-        { name: { $regex: keyword, $options: "i" } }, // Case-insensitive search on name
+        { name: { $regex: keyword, $options: "i" } },
       ];
     }
 
