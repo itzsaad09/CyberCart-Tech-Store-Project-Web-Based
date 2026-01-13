@@ -8,19 +8,18 @@ import {
   sendOrderDeliveredEmail,
 } from "../middleware/email.js";
 
-// --- Helper: Create Notification record for Flutter Messages Screen ---
 const createNotification = async (userId, orderId, status) => {
   try {
     const emoji = status === "Delivered" ? "✅" : "🚚";
     const orderIdShort = orderId.toString().slice(-6).toUpperCase();
     const message = `Order #${orderIdShort} is now ${status} ${emoji}`;
-    
+
     const notification = new notificationModel({
       userId,
       orderId,
       message,
       status,
-      isRead: false
+      isRead: false,
     });
     await notification.save();
   } catch (error) {
@@ -33,8 +32,6 @@ const placeOrder = async (req, res) => {
     const {
       userId,
       cartItemsArray,
-      shippingFees,
-      finalTotalBill,
       shippingInfo,
       paymentMethod,
       cardDetails,
@@ -44,13 +41,24 @@ const placeOrder = async (req, res) => {
     } = req.body;
 
     const user = await userModel.findById(userId);
-
     if (!user) {
       return res.status(404).json({
         success: false,
         message: "User not found. Cannot place order.",
       });
     }
+
+    const subtotal = cartItemsArray.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
+
+    const FREE_SHIPPING_THRESHOLD = 1999;
+    const STANDARD_SHIPPING_FEE = 150;
+
+    const validatedShippingFee =
+      subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_FEE;
+    const validatedTotalBill = subtotal + validatedShippingFee;
 
     for (const item of cartItemsArray) {
       const product = await productModel.findById(item.productId);
@@ -67,8 +75,8 @@ const placeOrder = async (req, res) => {
     const orderData = {
       userId: userId,
       items: cartItemsArray,
-      amount: finalTotalBill,
-      shippingCharges: shippingFees,
+      amount: validatedTotalBill,
+      shippingCharges: validatedShippingFee,
       address: shippingInfo,
       status: "Order Placed",
       paymentMethod: paymentMethod,
@@ -89,12 +97,11 @@ const placeOrder = async (req, res) => {
     const newOrder = new orderModel(orderData);
     await newOrder.save();
 
-    // --- NEW: Create Notification for "Order Placed" ---
     await createNotification(userId, newOrder._id, "Order Placed");
 
     const orderDetailsForEmail = {
       id: newOrder._id,
-      total: `Rs. ${finalTotalBill}`,
+      total: `Rs. ${validatedTotalBill}`,
       address: `${shippingInfo.addressLine1 || shippingInfo.address}, ${
         shippingInfo.city
       }`,
@@ -121,6 +128,8 @@ const placeOrder = async (req, res) => {
       success: true,
       message: "Order Placed Successfully",
       orderId: newOrder._id,
+      finalAmount: validatedTotalBill,
+      shippingChargeApplied: validatedShippingFee,
     });
   } catch (error) {
     console.error("Error placing order:", error);
@@ -202,7 +211,6 @@ const updateOrderStatus = async (req, res) => {
 
     await order.save();
 
-    // --- NEW: Create Notification for Status Update (Shipped, Delivered, etc.) ---
     await createNotification(order.userId._id, order._id, status);
 
     const user = order.userId;
