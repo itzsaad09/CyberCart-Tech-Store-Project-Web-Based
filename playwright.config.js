@@ -13,7 +13,11 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
-  reporter: [["list"], ["html", { open: "never" }]],
+  reporter: [
+    ["list"],
+    ["html", { open: "never" }],
+    ["allure-playwright", { outputFolder: "allure-results" }]
+  ],
   use: {
     actionTimeout: 10000,
     baseURL: process.env.BASE_URL || "https://tech-store-project-frontend.vercel.app",
