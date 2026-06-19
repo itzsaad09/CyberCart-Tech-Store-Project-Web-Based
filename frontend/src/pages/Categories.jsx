@@ -54,7 +54,7 @@ function Categories() {
         } else {
           console.error(
             "Failed to fetch products for category:",
-            response.status
+            response.status,
           );
           setError("Failed to fetch products for this category.");
         }

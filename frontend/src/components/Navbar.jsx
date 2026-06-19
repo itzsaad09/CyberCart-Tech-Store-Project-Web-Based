@@ -88,7 +88,7 @@ function Navbar() {
   useEffect(() => {
     if (debouncedSearchQuery) {
       const filtered = allProducts.filter((product) =>
-        product.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+        product.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()),
       );
       setSearchResults(filtered);
       setShowSuggestions(true);

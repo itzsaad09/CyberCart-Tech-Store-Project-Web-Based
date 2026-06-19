@@ -106,7 +106,7 @@ const OTPVerification = () => {
 
         if (token) {
           setTimeout(() => {
-            window.location.href = "/login";
+            window.location.href = "/signin";
           }, 1500);
         } else {
           setTimeout(() => {
@@ -209,9 +209,8 @@ const OTPVerification = () => {
           {/* Message Display */}
           {message && (
             <p
-              className={`otpverification-message ${
-                isSuccess ? "success" : "error"
-              }`}
+              className={`otpverification-message ${isSuccess ? "success" : "error"
+                }`}
             >
               {message}
             </p>
